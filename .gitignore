@@ -1,0 +1,8 @@
+media/
+/*.egg-info
+/.spyderproject
+.spyderproject
+.idea/*
+.vscode/*
+/**/__pycache__
+/**/.ipynb_checkpoints
