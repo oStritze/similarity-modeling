@@ -7,3 +7,5 @@ media/
 /**/__pycache__
 /**/.ipynb_checkpoints
 .DS_Store
+data/*.avi
+data/*.wav
