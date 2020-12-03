@@ -5,7 +5,16 @@ import pandas as pd
 from skimage.feature import blob_doh
 from tqdm import tqdm
 
-def feats_from_avi(fpath="../media/Muppets-02-04-04.avi", limit_frames=True, frames=100):
+def feats_from_avi(fpath="../media/Muppets-02-04-04.avi",
+                   limit_frames=True, frames=100, one_frame_per_sec=False,
+                  blob_sigma=400, blob_t=0.04,
+                  include_blobs=True, include_hists=True):
+    """
+        Return features from movie file. Features are Blobs and/or color histograms.
+        Blob detection can be specified by sigma and threshold parameter t. TODO: add green masks as param
+        Frames can be limited to achieve quicker results while debugging.
+        Function returns a pandas dataframe with features as columns.
+    """
     print("processing file:", fpath, "...")
     vcap = cv2.VideoCapture(fpath)
     success,image = vcap.read()
@@ -19,15 +28,15 @@ def feats_from_avi(fpath="../media/Muppets-02-04-04.avi", limit_frames=True, fra
     minflip = False
     seconds = -1
     imgs = []
-    feats = pd.DataFrame(columns=["minute", "second", "frame", "blobs",
-                                 # "r_hist", "g_hist", "b_hist"
+    hists = []
+    blobs = pd.DataFrame()
+    feats = pd.DataFrame(columns=["minute", "second", "frame",
+                                 # "blobs",
+                                 # "hists"
                                  ])
-    #while success and count < 751:
+
     for count in tqdm(range(0, frms)):
-        imgs.append(image) # BGR
-        #imgs.append(cv2.cvtColor(image, cv2.COLOR_BGR2HSV))
-        blobs = return_green_blobs(image)
-        #r,g,b = return_hists(image)
+
         # handle frame to time stuff
         if (count%25)==0:
             seconds +=1
@@ -37,16 +46,46 @@ def feats_from_avi(fpath="../media/Muppets-02-04-04.avi", limit_frames=True, fra
                 mins+=1
         elif (seconds%60)!=0 & minflip:
             minflip=False
-        # append feature blobs to dataframe for current minute, second, frame
-        feats = feats.append({"minute":mins, "second": seconds, "frame": count%25+1,
-                              "blobs": blobs,
-                              #"r_hist": r, "g_hist": g, "b_hist": b
-                             }, ignore_index=True)
-
+        
+        # to make this whole thing quicker, add ability to only get 1 frame per second...
+        if one_frame_per_sec==False:
+            # get blobs -- this is multi array with (x,y,radius), potentially many blobs, so safe in dataframe 
+            if include_blobs:
+                thisblob = pd.DataFrame(return_green_blobs(image, sigma=blob_sigma, t=blob_t))
+                blobs = pd.concat((blobs, thisblob), axis=1, ignore_index=True)
+            if include_hists:
+                hists.append( return_hists(image) )
+            imgs.append(image) # BGR
+            # append feature blobs to dataframe for current minute, second, frame
+            feats = feats.append({"minute":mins, "second": seconds%60, "frame": count%25+1,
+                                 # "blobs": blobs,
+                                 # "hists": hists, 
+                                 }, ignore_index=True)
+            
+        elif one_frame_per_sec==True and (count%25)==0:
+            if include_blobs:
+                thisblob = pd.DataFrame(return_green_blobs(image, sigma=blob_sigma, t=blob_t))
+                blobs = pd.concat((blobs, thisblob), axis=1, ignore_index=True)
+            if include_hists:
+                hists.append( return_hists(image) )
+            imgs.append(image) # BGR
+            # append feature blobs to dataframe for current minute, second, frame
+            #print(mins, seconds, count%25+1)
+            feats = feats.append({"minute":mins, "second": seconds%60, "frame": count%25+1,
+                                 # "blobs": blobs,
+                                 # "hists": hists, 
+                                 }, ignore_index=True)
+            
         success,image = vcap.read()
         count += 1
     
-    return(feats)
+    histDF = pd.DataFrame(hists)
+    blobDF = blobs.transpose()
+    
+    resDF = pd.concat((feats, histDF.add_suffix("_hist")), axis=1)
+    resDF = pd.concat((resDF, blobDF.add_suffix("_blob")), axis=1)
+    
+    return(imgs, resDF)
 
 def return_green_blobs(image, plot=False, sigma=400, t=0.04):
     image_hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
@@ -84,7 +123,7 @@ def return_green_blobs(image, plot=False, sigma=400, t=0.04):
             c = plt.Circle((x, y), r, color="red", linewidth=2, fill=False)
             ax[1].add_patch(c)
     
-    return(blobs_doh)
+    return(blobs_doh.flatten())
 
 
 def return_hists(image, plot=False):
@@ -92,7 +131,8 @@ def return_hists(image, plot=False):
     color = ('r','g','b')
     hists = []
     for i in range(0,3):
-        hists.append(cv2.calcHist([img], [i], None, [256], [0,256])) 
+        hists.append(cv2.calcHist([img], [i], None, [256], [0,256]).flatten()) 
+    #hists = cv2.calcHist([img], [0, 1, 2], None, [256, 256, 256], [0, 256, 0, 256, 0, 256]).flatten()
     hists = np.array(hists)
     if plot:
         plt.figure(figsize=(10,5))
@@ -103,4 +143,5 @@ def return_hists(image, plot=False):
             plt.plot(hists[i],color = col)
             plt.xlim([0,256])
         plt.show()
-    return(hists[0], hists[1], hists[2])
+    hists = np.stack(hists).flatten()
+    return(hists)

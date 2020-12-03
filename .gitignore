@@ -9,3 +9,4 @@ media/
 .DS_Store
 data/*.avi
 data/*.wav
+data/feats*.csv
