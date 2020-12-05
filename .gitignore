@@ -1,3 +1,4 @@
+student_data.txt
 media/
 /*.egg-info
 /.spyderproject
@@ -9,3 +10,4 @@ media/
 .DS_Store
 data/*.avi
 data/*.wav
+data/feats*.csv
