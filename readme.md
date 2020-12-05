@@ -27,10 +27,28 @@ For this intermediate exercise we only used precision as performance indicators.
 ### Oliver
 | Date | Time | Description |
 --- | --- | ---
-| 01 01 20 | 1500-1700 | Klowasser trinken |
+| 01 01 20 | 1500-1700 | TODO Oli |
 ## Infos on architecture, features, classifier, etc. - whatever you consider important/helpful
-...
+We decided to go for a supervised approach, so we had to watch and annotate the episodes ourselves. 
+Since checking every single frame would have been too tedious, we opted to annotate seconds only. (annotations can be found in ```data/gt/```).  
+### Audio
+We opted for classical feature engineering and extracted mel-frequency-cepstral-coefficents and also delta- and delta-delta-mfccs.  
+We flattened all of the matrices to gain a 2640-dimensional vector per second.  
+Then we used TPOT to find the optimal model, achieving a 92.3 accuracy score with an ensemble of Naive Bayes and Random Forest. The exported model can be found in ```src/audio_tpot.py```.  
+### Video
+TODO Oli
+### Ensemble (work in progress)
+We will build an ensemble combining both audio and video features after they separately annotate the data using their respective extracted features.  
+For the intermediate hand-in we will use both predictions (audio & video) connected by logical and & logical or and use these as final predictions to compare against the val set.  
 ## Test data (no videos, but images/audio with ground truth) & Weka Experimenter log file for classifier comparison (if applicable)
-...
-## ROC figures of classifier performance
-...
+We split our data in 3 sets (train / test/ validation), where training happened on episode 02-01-01, testing on 02-04-04 and validation on 03-04-03.
+Our manually annotated data can be found at ```data/gt/```.
+## Classifier performance (precision)
+Feature | Train | Test | Validation |
+--- | --- | ---
+| MFCC | .9385 | .9231 | .6666 |
+| Blob | .8677 | .8417 | .7210 |
+| Histogram | - | .9117  | .3441 |
+| Blob & Histogram | .9080 | .9209 | 0.8145 |
+| All Combined (AND) | TODO Oli | TODO Oli | TODO Oli |
+| All Combined (OR) | TODO Oli | TODO Oli | TODO Oli |
