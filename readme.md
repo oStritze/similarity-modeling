@@ -1,5 +1,6 @@
 # Intermediate Hand-In: Finding Kermit with Audio & Video Features
-...
+The intermediate Hand in consists only of the kermit task for now...
+
 ## Source code
 ```src/audio.ipynb``` ... main pipeline for audio features (mfcc)
 ```src/audio_tpot.py``` ... optimal audio classifier as found by TPOT  
@@ -27,7 +28,21 @@ For this intermediate exercise we only used precision as performance indicators.
 ### Oliver
 | Date | Time | Description |
 --- | --- | ---
-| 01 01 20 | 1500-1700 | TODO Oli |
+| 04 11 20 | 1000-1200 | Prepare Project and Git structure |
+| 04 11 20 | 1300-1500 | getting in touch with openCV |
+| 09 11 20 | 0800-0900 | Watch and annotate first episode |
+| 14 11 20 | 1400-1800 | first tries with blob and histogram detection |
+| 02 12 20 | 0800-1500 | extract visual features |
+| 02 12 20 | 1600-1900 | train first classifers on visual features |
+| 03 12 20 | 0800-1400 | extract visual features, train tpots |
+| 04 12 20 | 0800-1500 | train pipelines, evaluate classifiers  |
+
+| 06 12 20 | 1000-1200 | move results to evaluation pipeline, merge results from audio and video |
+| 06 12 20 | 1200-1400 | finalizing intermediate hand-in  |
+
+
+
+
 ## Infos on architecture, features, classifier, etc. - whatever you consider important/helpful
 We decided to go for a supervised approach, so we had to watch and annotate the episodes ourselves. 
 Since checking every single frame would have been too tedious, we opted to annotate seconds only. (annotations can be found in ```data/gt/```).  
@@ -36,8 +51,9 @@ We opted for classical feature engineering and extracted mel-frequency-cepstral-
 We flattened all of the matrices to gain a 2640-dimensional vector per second.  
 Then we used TPOT to find the optimal model, achieving a 92.3 accuracy score with an ensemble of Naive Bayes and Random Forest. The exported model can be found in ```src/audio_tpot.py```.  
 ### Video
-TODO Oli
+Again, opting for classical feature engineering. First we had a look at green blobs in the picture, which were exported per frame. Additionally, we exported color histogram values. The exportation took a while per video file, and the paramters and code can be found in ```src/visual_feat_ext.py```. We tried classifiers for histograms, blobs and combining histogram and blobs, with last performing best. Details can be found in ```src/visual.ipynb```. 
 ### Ensemble (work in progress)
+For the combined workflow, see ```src/evaluation.ipynb```.
 We will build an ensemble combining both audio and video features after they separately annotate the data using their respective extracted features.  
 For the intermediate hand-in we will use both predictions (audio & video) connected by logical and & logical or and use these as final predictions to compare against the val set.  
 ## Test data (no videos, but images/audio with ground truth) & Weka Experimenter log file for classifier comparison (if applicable)
