@@ -1,1 +1,9 @@
 *.csv filter=lfs diff=lfs merge=lfs -text
+
+
+data/ep1_flat_mfcc.csv export-ignore
+data/ep2_flat_mfcc.csv export-ignore
+data/ep3_flat_mfcc.csv export-ignore
+data/ep1_visual_full.csv export-ignore
+data/ep2_visual_full.csv export-ignore
+data/ep3_visual_full.csv export-ignore
