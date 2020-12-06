@@ -36,11 +36,8 @@ For this intermediate exercise we only used precision as performance indicators.
 | 02 12 20 | 1600-1900 | train first classifers on visual features |
 | 03 12 20 | 0800-1400 | extract visual features, train tpots |
 | 04 12 20 | 0800-1500 | train pipelines, evaluate classifiers  |
-
 | 06 12 20 | 1000-1200 | move results to evaluation pipeline, merge results from audio and video |
 | 06 12 20 | 1200-1400 | finalizing intermediate hand-in  |
-
-
 
 
 ## Infos on architecture, features, classifier, etc. - whatever you consider important/helpful
@@ -60,11 +57,12 @@ For the intermediate hand-in we will use both predictions (audio & video) connec
 We split our data in 3 sets (train / test/ validation), where training happened on episode 02-01-01, testing on 02-04-04 and validation on 03-04-03.
 Our manually annotated data can be found at ```data/gt/```.
 ## Classifier performance (precision)
-Feature | Train | Test | Validation |
---- | --- | ---
+
+| Feature | Train | Test | Validation |
+--- | --- | --- | ---
 | MFCC | .9385 | .9231 | .6666 |
 | Blob | .8677 | .8417 | .7210 |
 | Histogram | - | .9117  | .3441 |
 | Blob & Histogram | .9080 | .9209 | 0.8145 |
-| All Combined (AND) | TODO Oli | TODO Oli | TODO Oli |
-| All Combined (OR) | TODO Oli | TODO Oli | TODO Oli |
+| All Combined (AND) | - | - | 1. (very bad recall though) |
+| All Combined (OR) | - | - | 0.8193 |
