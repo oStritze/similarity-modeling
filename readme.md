@@ -25,6 +25,7 @@ For this intermediate exercise we only used precision as performance indicators.
 | 02 12 20 | 1300-1400 | Watch and annotate third episode |
 | 02 12 20 | 1400-1800 | Create evaluation pipeline |
 | 05 12 20 | 2000-2100 | Finalizing intermediate hand-in |
+| 11 01 21 | 1000-1800 | Kermit Audio Experimentation |
 ### Oliver
 | Date | Time | Description |
 --- | --- | ---
