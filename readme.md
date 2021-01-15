@@ -2,11 +2,15 @@
 The intermediate Hand in consists only of the kermit task for now...
 
 ## Source code
-```src/audio.ipynb``` ... main pipeline for audio features (mfcc)
+```src/audio_kermit.ipynb``` ... main pipeline for audio features (mfcc)
 ```src/audio_tpot.py``` ... optimal audio classifier as found by TPOT  
-```src/visual_feat_ext.py``` ... helper functions for visual feature extraction (blob detection & color histogramm)  
+```src/audio_waldorf_statler.ipynb``` ... train a TPOT on MFCC data for w+s with CV  
 ```src/create_visual_feature_csv.py``` ... creates visual feature csv files  
-```src/evaluation.ipynb``` ... combines and evaluates audio and video features  
+```src/visual_feat_ext.py``` ... helper functions for visual feature extraction (blob detection & color histogramm)  
+```src/visual_kermit.ipynb``` ... kermit visual pipeline, feature creation and TPOT classifier creation + val
+```src/visual_waldorf_statler.ipynb``` ... 
+```src/__disabled__evaluation.ipynb``` ... combines and evaluates audio and video features 
+
 ## Complete student data
 please find our complete student data attached in ```student_data.txt```
 ## Entry point of the code (e.g. main Matlab file)
@@ -46,7 +50,7 @@ For this intermediate exercise we only used precision as performance indicators.
 | 03 01 21 | 1100-1600 | finalizing fitting into laptop memory |
 | 14 01 21 | 1630-1800 | prettify existing folder structures |
 | 14 01 21 | 1800-1900 | finalize kermit_video cv approach |
-
+| 15 01 21 | 0900-1100 | finalize ws_audio approach, prettify |
 
 
 ## Infos on architecture, features, classifier, etc. - whatever you consider important/helpful
