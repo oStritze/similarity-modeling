@@ -38,7 +38,15 @@ For this intermediate exercise we only used precision as performance indicators.
 | 03 12 20 | 0800-1400 | extract visual features, train tpots |
 | 04 12 20 | 0800-1500 | train pipelines, evaluate classifiers  |
 | 06 12 20 | 1000-1200 | move results to evaluation pipeline, merge results from audio and video |
-| 06 12 20 | 1200-1400 | finalizing intermediate hand-in  |
+| 06 12 20 | 1200-1400 | finalizing intermediate hand-in |
+| 31 12 20 | 0930-1330 | creating missing w+s ground truth |
+| 31 12 20 | 1400-1500 | try kermit_video on cv rather than train-test-val |
+| 31 12 20 | 1500-1700 | dig into existing audio features, trying first tpot models |
+| 02 01 21 | 1400-1700 | trying different tpot approaches that fit into laptop memory |
+| 03 01 21 | 1100-1600 | finalizing fitting into laptop memory |
+| 14 01 21 | 1630-1800 | prettify existing folder structures |
+| 14 01 21 | 1800-1900 | finalize kermit_video cv approach |
+
 
 
 ## Infos on architecture, features, classifier, etc. - whatever you consider important/helpful
