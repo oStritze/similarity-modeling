@@ -2,22 +2,28 @@
 The intermediate Hand in consists only of the kermit task for now...
 
 ## Source code
-```src/audio_kermit.ipynb``` ... main pipeline for audio features (mfcc)
-```src/audio_tpot.py``` ... optimal audio classifier as found by TPOT  
-```src/audio_waldorf_statler.ipynb``` ... train a TPOT on MFCC data for w+s with CV  
-```src/create_visual_feature_csv.py``` ... creates visual feature csv files  
-```src/visual_feat_ext.py``` ... helper functions for visual feature extraction (blob detection & color histogramm)  
-```src/visual_kermit.ipynb``` ... kermit visual pipeline, feature creation and TPOT classifier creation + val
-```src/visual_waldorf_statler.ipynb``` ... 
-```src/__disabled__evaluation.ipynb``` ... combines and evaluates audio and video features 
+```src/__debug_visual_kermit.ipynb``` ... detailed information on how visual features were created 
+```src/audio_kermit_tpot_optimization.ipynb``` ... finding optimal audio classifier via AutoML (TPOT API) 
+```src/audio_kermit.ipynb``` ... main pipeline for audio features (mfcc) 
+```src/audio_waldorf_statler.ipynb``` ... train a TPOT on MFCC data for w+s with CV 
+```src/create_visual_feature_csv.py``` ... creates visual feature csv files 
+```src/utils.py``` ... the famous utils.py file every project needs
+```src/visual_feat_ext.py``` ... helper functions for visual feature extraction (blob detection & color histogramm) 
+```src/visual_kermit.ipynb``` ... kermit visual pipeline, feature creation and prediction on train/test split // CV
+```src/visual_waldorf_statler.ipynb``` ... train a TPOT classifier based on (already created) histogram data for w+s detection
+```src/roc_figures/``` ... contains roc_figures for classifiers
+```src/tpot_exports/``` ... contains exported tpot pipelines with best classifiers
 
 ## Complete student data
 please find our complete student data attached in ```student_data.txt```
 ## Entry point of the code (e.g. main Matlab file)
-We recommend you to download our repository from [our github repository](https://github.com/oStritze/similarity-modeling), since we could not provide our feature extraction csv files due to file size. In this case you could use ```src/evaluation.ipynb``` as entry point.  
-You could also extract the features by executing ```src/audio.ipynb``` and ```src/create_visual_features_csv.py``` and then look at ```src/evaluation.ipynb```.  
+We recommend you to download our repository from [our github repository](https://github.com/oStritze/similarity-modeling), since we could not provide our feature extraction csv files due to file size.  You could also extract the features by executing ```src/audio_kermit.ipynb``` and ```src/create_visual_features_csv.py```.
+
+After extracting the features / downloading them, you are able to follow the implementation in the respective notebooks for Kermit / WS Audio and Video pipelines. A debugging overview of how the video features were created can be found in ```__debug_visual_kermit.ipynb``` and ```audio_kermit.ipynb```. 
+
 ## Performance indicators (e.g. Recall, Precision, etc.)
-For this intermediate exercise we only used precision as performance indicators.  
+We used ROC-AUC plots and SKlearns Precision, Recall, Accuracy and F1. As a optimization metric for TPOT AutoML we used ROC-AUC. Please find the ROC-AUC plots in ```src/roc_figures/```.
+
 ## Timesheets
 ### Gabriel
 | Date | Time | Description |
@@ -30,6 +36,8 @@ For this intermediate exercise we only used precision as performance indicators.
 | 02 12 20 | 1400-1800 | Create evaluation pipeline |
 | 05 12 20 | 2000-2100 | Finalizing intermediate hand-in |
 | 11 01 21 | 1000-1800 | Kermit Audio Experimentation |
+| 12 01 21 | 1100-1200 | Waldorf + Statler Video Implementation |
+
 ### Oliver
 | Date | Time | Description |
 --- | --- | ---
@@ -59,23 +67,31 @@ Since checking every single frame would have been too tedious, we opted to annot
 ### Audio
 We opted for classical feature engineering and extracted mel-frequency-cepstral-coefficents and also delta- and delta-delta-mfccs.  
 We flattened all of the matrices to gain a 2640-dimensional vector per second.  
-Then we used TPOT to find the optimal model, achieving a 92.3 accuracy score with an ensemble of Naive Bayes and Random Forest. The exported model can be found in ```src/audio_tpot.py```.  
+
 ### Video
-Again, opting for classical feature engineering. First we had a look at green blobs in the picture, which were exported per frame. Additionally, we exported color histogram values. The exportation took a while per video file, and the paramters and code can be found in ```src/visual_feat_ext.py```. We tried classifiers for histograms, blobs and combining histogram and blobs, with last performing best. Details can be found in ```src/visual.ipynb```. 
-### Ensemble (work in progress)
-For the combined workflow, see ```src/evaluation.ipynb```.
-We will build an ensemble combining both audio and video features after they separately annotate the data using their respective extracted features.  
-For the intermediate hand-in we will use both predictions (audio & video) connected by logical and & logical or and use these as final predictions to compare against the val set.  
+Again, opting for classical feature engineering. First we had a look at green blobs in the picture, which were exported per frame. Additionally, we exported color histogram values. The exportation took a while per video file, and the paramters and code can be found in ```src/__debug_visual_feat_ext.py```. We tried classifiers for histograms, blobs and combining histogram and blobs, with last performing best. Details can be found in ```src/visual_kermit.ipynb```. 
+
 ## Test data (no videos, but images/audio with ground truth) & Weka Experimenter log file for classifier comparison (if applicable)
 We split our data in 3 sets (train / test/ validation), where training happened on episode 02-01-01, testing on 02-04-04 and validation on 03-04-03.
 Our manually annotated data can be found at ```data/gt/```.
-## Classifier performance (precision)
 
-| Feature | Train | Test | Validation |
---- | --- | --- | ---
-| MFCC | .9385 | .9231 | .6666 |
-| Blob | .8677 | .8417 | .7210 |
-| Histogram | - | .9117  | .3441 |
-| Blob & Histogram | .9080 | .9209 | 0.8145 |
-| All Combined (AND) | - | - | 1. (very bad recall though) |
-| All Combined (OR) | - | - | 0.8193 |
+__Final Hand in__: We tried a combined Cross validation approach and it performed reasonably better in terms of scoring metrics which we implemented for the final hand in for all classifiers. 
+
+## Classifier performance (auc)
+More Metrics can be found in the corresponding notebooks.
+
+### Kermit
+| Feature | Train | Validation |
+--- | --- | ---
+| MFCC | TODO | .79 |
+| Blob & Histogram | 1.0 | 1.0 |
+
+### Waldorf + Statler (auc)
+| Feature | Train | Validation |
+--- | --- | ---
+| MFCC | 0.79 | .63 |
+| Histogram | TODO | 1.0 |
+
+## Interpetation of Results
+From our results we conclude that the visual features are more promising in terms of predicting the target characters. Blob-detection for visual features had a positive impact, needing much more computational effort though when creating the features. Even for detecting Waldorf and Statler, the visual features (Color Histograms solely) appeared more promising than the audio feature extaction methods used (MFCC). 
+Also, combining the episodes features and labels and creating a randomized train-test split over all episodes turned out as the better approach. This is problably due to the last episode being an outlier (Robin-Hood-Themed) with many occurences of green shaped and colored frames and overlapping audio/voice characteristics. 
