@@ -83,14 +83,14 @@ More Metrics can be found in the corresponding notebooks.
 ### Kermit
 | Feature | Train | Validation |
 --- | --- | ---
-| MFCC | TODO | .79 |
+| MFCC | 1.0 | .79 |
 | Blob & Histogram | 1.0 | 1.0 |
 
 ### Waldorf + Statler (auc)
 | Feature | Train | Validation |
 --- | --- | ---
 | MFCC | 0.79 | .63 |
-| Histogram | TODO | 1.0 |
+| Histogram | 1.0 | 1.0 |
 
 ## Interpetation of Results
 From our results we conclude that the visual features are more promising in terms of predicting the target characters. Blob-detection for visual features had a positive impact, needing much more computational effort though when creating the features. Even for detecting Waldorf and Statler, the visual features (Color Histograms solely) appeared more promising than the audio feature extaction methods used (MFCC). 
